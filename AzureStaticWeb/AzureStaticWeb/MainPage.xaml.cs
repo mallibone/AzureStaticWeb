@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AzureStaticWeb.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,16 @@ namespace AzureStaticWeb
         public MainPage()
         {
             InitializeComponent();
+            BindingContext = ViewModel;
+        }
+
+
+        QuotesViewModel ViewModel { get; } = new QuotesViewModel();
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            await ViewModel.Init();
         }
     }
 }

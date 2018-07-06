@@ -4,11 +4,19 @@
              xmlns:local="clr-namespace:AzureStaticWeb"
              x:Class="AzureStaticWeb.MainPage">
 
-    <StackLayout>
-        <!-- Place new controls here -->
-        <Label Text="Welcome to Xamarin.Forms!" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
-    </StackLayout>
+    <Grid>
+        <StackLayout VerticalOptions="CenterAndExpand">
+            <!-- Place new controls here -->
+            <Label Text="{Binding Quote}" HorizontalTextAlignment="Center" FontSize="Large" 
+           HorizontalOptions="Center"/>
+            <Label Text="{Binding Author}" 
+           HorizontalOptions="Center" FontSize="Small" 
+                   HorizontalTextAlignment="Center" />
+            <Button Text="Next Quote" Command="{Binding NextQuoteCommand}"
+           HorizontalOptions="Center"/>
+        </StackLayout>
+        <BoxView BackgroundColor="#AAFFFFFF" IsVisible="{Binding IsBusy}" />
+        <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+    </Grid>
 
 </ContentPage>
