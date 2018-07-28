@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -72,7 +71,7 @@ namespace AzureStaticWeb.ViewModels
                 case Device.UWP:
                     using (var httpClient = new HttpClient())
                     {
-                        var response = await httpClient.GetAsync("https://gnabberstaticweb.z6.web.core.windows.net/quotes.json");
+                        var response = await httpClient.GetAsync("https://gnabberonlinestorage.blob.core.windows.net/alpha/quotes.json");
                         quotesJson = await response.Content.ReadAsStringAsync();
                     }
                     break;
