@@ -10,13 +10,19 @@
             <Label Text="{Binding Quote}" HorizontalTextAlignment="Center" FontSize="Large" 
            HorizontalOptions="Center"/>
             <Label Text="{Binding Author}" 
-           HorizontalOptions="Center" FontSize="Small" 
+                   HorizontalOptions="Center"
+                   FontSize="Small" 
                    HorizontalTextAlignment="Center" />
             <Button Text="Next Quote" Command="{Binding NextQuoteCommand}"
            HorizontalOptions="Center"/>
         </StackLayout>
-        <BoxView BackgroundColor="#AAFFFFFF" IsVisible="{Binding IsBusy}" />
-        <ActivityIndicator HeightRequest="80" WidthRequest="80" IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+        <BoxView BackgroundColor="#AA000000" IsVisible="{Binding IsBusy}" />
+        <ActivityIndicator VerticalOptions="Center" 
+                           HorizontalOptions="Center" 
+                           HeightRequest="80" 
+                           WidthRequest="80" 
+                           IsVisible="{Binding IsBusy}" 
+                           IsRunning="{Binding IsBusy}" />
     </Grid>
 
 </ContentPage>
