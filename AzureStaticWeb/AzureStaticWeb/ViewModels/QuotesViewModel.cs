@@ -56,6 +56,7 @@ namespace AzureStaticWeb.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ICommand NextQuoteCommand { get; }
+        public string CurrentEtagVersion => Preferences.Get(EtagKey, string.Empty);
 
         public async Task Init()
         {
@@ -65,14 +66,13 @@ namespace AzureStaticWeb.ViewModels
             string quotesJson;
             using (var httpClient = new HttpClient())
             {
-                if(!string.IsNullOrEmpty(CurrentEtagVersion)) httpClient.DefaultRequestHeaders.Add("If-None-Match", CurrentEtagVersion);
+                if (!string.IsNullOrEmpty(CurrentEtagVersion)) httpClient.DefaultRequestHeaders.Add("If-None-Match", CurrentEtagVersion);
                 var response = await httpClient.GetAsync("https://gnabberonlinestorage.blob.core.windows.net/alpha/quotes.json");
 
                 quotesJson = response.StatusCode == HttpStatusCode.NotModified
                     ? ReadQuotesFromCache()
                     : await response.Content.ReadAsStringAsync();
 
-                //quotesJson = await response.Content.ReadAsStringAsync();
                 UpdateLocalCache(response.Headers.ETag, quotesJson);
             }
             _quotes = JsonConvert.DeserializeObject<List<QuoteInfo>>(quotesJson);
@@ -81,24 +81,17 @@ namespace AzureStaticWeb.ViewModels
             IsBusy = false;
         }
 
-        //public EntityTagHeaderValue CurrentEtagVersion => JsonConvert.DeserializeObject<EntityTagHeaderValue>(Preferences.Get(EtagKey, string.Empty));
-        public string CurrentEtagVersion => Preferences.Get(EtagKey, string.Empty);
-
         private void UpdateLocalCache(EntityTagHeaderValue eTag, string quotesJson)
         {
             // Only update the cache if we need to
             if (eTag == null || CurrentEtagVersion == eTag.Tag) return;
-
-            //Preferences.Set(EtagKey, JsonConvert.SerializeObject(eTag));
             Preferences.Set(EtagKey, eTag.Tag);
             File.WriteAllText(_quotesFilename, quotesJson);
         }
 
-
         private string ReadQuotesFromCache()
         {
             if (!File.Exists(_quotesFilename)) return string.Empty;
-
             return File.ReadAllText(_quotesFilename);
         }
 
