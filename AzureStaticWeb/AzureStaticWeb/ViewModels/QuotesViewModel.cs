@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -55,45 +57,50 @@ namespace AzureStaticWeb.ViewModels
 
         public ICommand NextQuoteCommand { get; }
 
-public async Task Init()
-{
-    if (_quote != null) return;
+        public async Task Init()
+        {
+            if (_quote != null) return;
 
-    IsBusy = true;
-    string quotesJson;
-    using (var httpClient = new HttpClient())
-    {
-        var response = await httpClient.GetAsync("https://gnabberonlinestorage.blob.core.windows.net/alpha/quotes.json");
-        quotesJson = CurrentEtagVersion == response.Headers.ETag.Tag
-            ? ReadQuotesFromCache()
-            : await response.Content.ReadAsStringAsync();
+            IsBusy = true;
+            string quotesJson;
+            using (var httpClient = new HttpClient())
+            {
+                if(!string.IsNullOrEmpty(CurrentEtagVersion)) httpClient.DefaultRequestHeaders.Add("If-None-Match", CurrentEtagVersion);
+                var response = await httpClient.GetAsync("https://gnabberonlinestorage.blob.core.windows.net/alpha/quotes.json");
 
-        UpdateLocalCache(response.Headers.ETag.Tag, quotesJson);
-    }
-    _quotes = JsonConvert.DeserializeObject<List<QuoteInfo>>(quotesJson);
+                quotesJson = response.StatusCode == HttpStatusCode.NotModified
+                    ? ReadQuotesFromCache()
+                    : await response.Content.ReadAsStringAsync();
 
-    PickAndSetQuote();
-    IsBusy = false;
-}
+                //quotesJson = await response.Content.ReadAsStringAsync();
+                UpdateLocalCache(response.Headers.ETag, quotesJson);
+            }
+            _quotes = JsonConvert.DeserializeObject<List<QuoteInfo>>(quotesJson);
 
-public string CurrentEtagVersion => Preferences.Get(EtagKey, string.Empty);
+            PickAndSetQuote();
+            IsBusy = false;
+        }
 
-private void UpdateLocalCache(string eTag, string quotesJson)
-{
-    // Only update the cache if we need to
-    if (CurrentEtagVersion == eTag) return;
+        //public EntityTagHeaderValue CurrentEtagVersion => JsonConvert.DeserializeObject<EntityTagHeaderValue>(Preferences.Get(EtagKey, string.Empty));
+        public string CurrentEtagVersion => Preferences.Get(EtagKey, string.Empty);
 
-    Preferences.Set(EtagKey, eTag);
-    File.WriteAllText(_quotesFilename, quotesJson);
-}
+        private void UpdateLocalCache(EntityTagHeaderValue eTag, string quotesJson)
+        {
+            // Only update the cache if we need to
+            if (eTag == null || CurrentEtagVersion == eTag.Tag) return;
+
+            //Preferences.Set(EtagKey, JsonConvert.SerializeObject(eTag));
+            Preferences.Set(EtagKey, eTag.Tag);
+            File.WriteAllText(_quotesFilename, quotesJson);
+        }
 
 
-private string ReadQuotesFromCache()
-{
-    if (!File.Exists(_quotesFilename)) return string.Empty;
+        private string ReadQuotesFromCache()
+        {
+            if (!File.Exists(_quotesFilename)) return string.Empty;
 
-    return File.ReadAllText(_quotesFilename);
-}
+            return File.ReadAllText(_quotesFilename);
+        }
 
         private void PickAndSetQuote()
         {
