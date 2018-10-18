@@ -7,6 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Background.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Background.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Ooui" Version="1.0.1" />
     <PackageReference Include="Ooui.Forms" Version="1.0.1" />
     <PackageReference Include="Ooui.Wasm" Version="1.0.1" />

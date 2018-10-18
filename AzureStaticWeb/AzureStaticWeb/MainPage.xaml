@@ -5,7 +5,8 @@
              x:Class="AzureStaticWeb.MainPage">
 
     <Grid>
-        <StackLayout VerticalOptions="CenterAndExpand">
+        <Image Source="Background.png" Aspect="AspectFill" />
+        <StackLayout VerticalOptions="Center" BackgroundColor="#AAFFFFFF" Padding="16">
             <!-- Place new controls here -->
             <Label Text="{Binding Quote}" HorizontalTextAlignment="Center" FontSize="Large" 
            HorizontalOptions="Center"/>
