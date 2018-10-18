@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Xamarin.Forms;
 using Ooui;
 
@@ -13,23 +14,10 @@ namespace AzureStaticWeb.WASM
 
             // Create the UI
             var page = new MainPage();
-            //var stack = new StackLayout();
-            //var button = new Xamarin.Forms.Button
-            //{
-            //    Text = "Click me!"
-            //};
-            //stack.Children.Add(button);
-            //page.Content = stack;
+            UI.Publish("/main", page.GetOouiElement());
+            UI.Present("/main");
 
-            //// Add some logic to it
-            //var count = 0;
-            //button.Clicked += (s, e) => {
-            //    count++;
-            //    button.Text = $"Clicked {count} times";
-            //};
-
-            // Publish a root element to be displayed
-            UI.Publish("/", page.GetOouiElement());
+            Console.ReadLine();
         }
     }
 }
