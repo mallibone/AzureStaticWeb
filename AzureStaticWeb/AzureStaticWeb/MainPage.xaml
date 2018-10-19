@@ -17,7 +17,12 @@
            HorizontalOptions="Center"/>
         </StackLayout>
         <BoxView BackgroundColor="#AA000000" IsVisible="{Binding IsBusy}" />
-        <ActivityIndicator HeightRequest="80" WidthRequest="80" IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+        <ActivityIndicator HeightRequest="80" 
+                           WidthRequest="80" 
+                           HorizontalOptions="Center" 
+                           VerticalOptions="Center"
+                           IsVisible="{Binding IsBusy}" 
+                           IsRunning="{Binding IsBusy}" />
     </Grid>
 
 </ContentPage>

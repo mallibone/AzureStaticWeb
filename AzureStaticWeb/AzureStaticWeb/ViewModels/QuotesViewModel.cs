@@ -66,12 +66,19 @@ namespace AzureStaticWeb.ViewModels
             IsBusy = true;
             string quotesJson;
 
-            using (var httpClient = new HttpClient())
+            try
             {
-                var response = await httpClient.GetAsync("https://gnabberonlinestorage.blob.core.windows.net/alpha/quotes.json");
-                quotesJson = await response.Content.ReadAsStringAsync();
+                using (var httpClient = new HttpClient())
+                {
+                    var response = await httpClient.GetAsync("https://gnabberonlinestorage.blob.core.windows.net/alpha/quotes.json");
+                    quotesJson = await response.Content.ReadAsStringAsync();
+                }
+                _quotes = JsonConvert.DeserializeObject<List<QuoteInfo>>(quotesJson);
             }
-            _quotes = JsonConvert.DeserializeObject<List<QuoteInfo>>(quotesJson);
+            catch
+            {
+                _quotes = new List<QuoteInfo> { new QuoteInfo { Name = "Life is 10% what happens to me and 90% of how I react to it.", Quote = "Charles Swindoll" } };
+            }
 
             PickAndSetQuote();
             IsBusy = false;
