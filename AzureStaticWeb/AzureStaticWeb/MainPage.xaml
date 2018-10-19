@@ -6,17 +6,17 @@
 
     <Grid>
         <Image Source="Background.png" Aspect="AspectFill" />
-        <StackLayout VerticalOptions="Center" BackgroundColor="#AAFFFFFF" Padding="16">
+        <StackLayout VerticalOptions="Center" BackgroundColor="#AA000000" Padding="16">
             <!-- Place new controls here -->
             <Label Text="{Binding Quote}" HorizontalTextAlignment="Center" FontSize="Large" 
-           HorizontalOptions="Center"/>
+           HorizontalOptions="Center" TextColor="White" />
             <Label Text="{Binding Author}" 
            HorizontalOptions="Center" FontSize="Small" 
-                   HorizontalTextAlignment="Center" />
-            <Button Text="Next Quote" Command="{Binding NextQuoteCommand}"
+                   HorizontalTextAlignment="Center" TextColor="White" />
+            <Button Text="Next Quote" Command="{Binding NextQuoteCommand}" BackgroundColor="White" TextColor="Black"
            HorizontalOptions="Center"/>
         </StackLayout>
-        <BoxView BackgroundColor="#AAFFFFFF" IsVisible="{Binding IsBusy}" />
+        <BoxView BackgroundColor="#AA000000" IsVisible="{Binding IsBusy}" />
         <ActivityIndicator HeightRequest="80" WidthRequest="80" IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
     </Grid>
 
